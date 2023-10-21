@@ -33,21 +33,20 @@ def parseXML(xmlfile):
 
         # iterate child elements of issue
         for child in item:
-            
-             # special checking for namespace object content:media
+            # special checking for namespace object content:media
             if child.tag == '{http://search.yahoo.com/mrss/}content':
                 issues['media'] = child.attrib['url']
             else:
                 issues[child.tag] = child.text.encode('utf8')
-        
+
         # append news dictionary to news items list
         foodissues.append(issues)
-
+    
     i = 0
     for item in foodissues:
         item['ID'] = i
         i += 1
-    
+
     return foodissues
 
 # def addID(foodissues):
@@ -58,18 +57,19 @@ def parseXML(xmlfile):
 
 def savetoCSV(foodissues, filename):
     # specifying the fields of csv file
-    fields = ['guid', 'title', 'pubDate', 'description', 'link', 'content', 'ID']
+    # fieldnames=salary[0].keys()fields = ['guid', 'title', 'pubDate', 'description', 'link', 'content', 'ID']
 
     # writing to csv file
-    with open(filename, 'w') as csvfile:
+    with open(filename, 'w', newline = '', encoding = 'utf-8') as csvfile:
         #creating a new csv dict writer object
-        writer = csv.DictWriter(csvfile, fieldnames = fields)
+        writer = csv.DictWriter(csvfile, fieldnames=foodissues[0].keys())
 
         # writing headers
         writer.writeheader()
 
         # write data rows
-        writer.writerow(foodissues)
+        for row_dict in foodissues:
+            writer.writerow(row_dict)
 
 
 
